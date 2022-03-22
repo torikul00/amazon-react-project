@@ -1,0 +1,42 @@
+[
+    {
+      "_id": "62375333f93c79771d26d95e",
+      "age": 35,
+      "name": "Adams Clarke",
+      "gender": "male",
+      "company": "CENTREE",
+      "email": "adamsclarke@centree.com"
+    },
+    {
+      "_id": "62375333c428491910fe44c2",
+      "age": 35,
+      "name": "Valeria Lindsey",
+      "gender": "female",
+      "company": "EZENTIA",
+      "email": "valerialindsey@ezentia.com"
+    },
+    {
+      "_id": "62375333b959bab1ac782585",
+      "age": 32,
+      "name": "Leona Carlson",
+      "gender": "female",
+      "company": "DYNO",
+      "email": "leonacarlson@dyno.com"
+    },
+    {
+      "_id": "623753330f2cb41c47330399",
+      "age": 23,
+      "name": "Kristina Barton",
+      "gender": "female",
+      "company": "COMVOY",
+      "email": "kristinabarton@comvoy.com"
+    },
+    {
+      "_id": "62375333e2c46b7372e38699",
+      "age": 25,
+      "name": "Douglas Curtis",
+      "gender": "male",
+      "company": "INTERGEEK",
+      "email": "douglascurtis@intergeek.com"
+    }
+  ]
