@@ -1,33 +1,63 @@
 import React, { useEffect, useState } from 'react';
 import Product from '../Product/Product';
 import ShowCart from '../ShowingCart/ShowCart';
-
+import { CartTotal } from '../CartTotal/CartTotal'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faShoppingCart } from '@fortawesome/free-solid-svg-icons'
 import './Shop.css'
+import { addToDb, getStoredItem } from '../../utilities/fakedb';
 
 const Shop = () => {
-
+    // load local storage data 
+    
     const [products, setProducts] = useState([])
     
-
     useEffect(() => {
         fetch('products.json')
         .then(res => res.json())
         .then(data => setProducts(data))
     }, [])
 
+    
+    useEffect(() => {
+        const storeData = getStoredItem()
+        const addedCart = []
+        for (const id in storeData) {
+            const addedProducts = products.find(product => product.id === id)
+            if (addedProducts) {
+                const quantity = storeData[id]
+                addedProducts.quantity = quantity
+                addedCart.push(addedProducts)
+            }
+          
+        }
+        setCart(addedCart)
+    }, [products])
+ 
+
+
     // handler
-    const [cart , setCart] = useState([])
-    const handleAddtoCart = (products) => {
-        const newCart = [...cart, products];
-        setCart(newCart)
-        setCartMsg('')
+    const [cart, setCart] = useState([])
+    
+    const handleAddtoCart = (selectedProduct) => {
         
+        let newCart = []
+        const exists = cart.find(product => product.id === selectedProduct.id)
+        if (!exists) {
+            selectedProduct.quantity = 1
+            newCart = [...cart , selectedProduct]
+        }
+        else {
+            const rest = cart.filter(product => product.id !==selectedProduct.id)
+            exists.quantity = exists.quantity + 1
+            newCart = [...rest,exists]
+        }
+        setCart(newCart)
+        addToDb(selectedProduct.id)
      
     }
 
-
-    console.log(cart)
-    const [cartMsg , setCartMsg] = useState('Your Cart is Emty')
+    
     // returning
     return (
         <div className='shopping-container'>
@@ -42,10 +72,15 @@ const Shop = () => {
             </div>       
 
             <div className="cart-container">
-                <h2>Order Summary </h2><hr />
-                <h3 style={{textAlign:'center'}}>{ cartMsg}</h3>
+                <h3>Order Summary </h3>
+                <FontAwesomeIcon className='icon' icon={faShoppingCart} />
+                <hr />                
+
+           
+                
+                    <CartTotal cart = {cart}  />
                 {
-                    cart.map(product => <ShowCart product={product} />)
+                    cart.map(product => <ShowCart product={product}/>)
                 }
             </div>
         </div>

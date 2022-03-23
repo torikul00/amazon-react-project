@@ -16,15 +16,18 @@
     border-radius: 7px;
     color: white;
     padding: 20px 20px;
+    
 }
-.cart-container h2 {
+.cart-container h3 {
+    display: inline-block;
     text-align: center;
     padding-bottom: 10px;
     font-weight: 400;
     color: white;
+    
    
 }
 .cart-container hr{
-   border: 2px solid white;
-   margin-bottom: 10px;
+   border: 1px solid white;
+   margin: 10px 0px;
 }

@@ -2,13 +2,13 @@ import React from 'react';
 import './ShowCart.css'
 
 const ShowCart = (props) => {
-    const { name, seller, img, price, category, ratings } = props.product
+    const { name, seller, img, price, category, } = props.product
     return (
-        <div className='cart'>
+        
+             <div className='cart'>
             <img src={img} alt="" />
             <div>
                 <h4 className='name'>{name}</h4>
-        
                 <p> Price : ${price}</p>         
                 <p>Macufacturer : {category}</p>
                 <p>Seller : {seller}</p>
@@ -16,6 +16,7 @@ const ShowCart = (props) => {
             </div>
             <button>Buy Now</button>
         </div>
+      
     );
 };
 

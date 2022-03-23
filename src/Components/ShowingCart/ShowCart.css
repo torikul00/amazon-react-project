@@ -1,3 +1,4 @@
+
 .cart{
     width: 100%;
     height: auto;
@@ -10,6 +11,7 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
+   
 }
 .cart img {
     width: 80%;
