@@ -1,0 +1,28 @@
+.img{
+    width: 100px;
+    margin:0px 10px ;
+}
+.cart-item {
+    display: flex;
+    border-radius: 7px;
+    align-items: center;
+    width: 500px;
+    border: 1px solid black;
+    padding: 10px;
+    margin: 30px 0px;
+    position: relative;
+}
+.cart-item button {
+    position: absolute;
+    top:50%;
+    right: 0px;
+    transform: translate(-50%,-50%);
+    border: none;
+    background-color: red;
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    color: white;
+
+
+}

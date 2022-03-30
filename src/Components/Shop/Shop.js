@@ -6,18 +6,13 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faShoppingCart } from '@fortawesome/free-solid-svg-icons'
 import './Shop.css'
 import { addToDb, getStoredItem } from '../../utilities/fakedb';
+import UseProduct from '../Hooks/UseProduct';
+import useCart from '../useCart/useCart';
 
 const Shop = () => {
     // load local storage data 
-    
-    const [products, setProducts] = useState([])
-    
-    useEffect(() => {
-        fetch('products.json')
-        .then(res => res.json())
-        .then(data => setProducts(data))
-    }, [])
 
+    const [products] = UseProduct()
     
     useEffect(() => {
         const storeData = getStoredItem()
@@ -29,58 +24,55 @@ const Shop = () => {
                 addedProducts.quantity = quantity
                 addedCart.push(addedProducts)
             }
-          
+
         }
         setCart(addedCart)
     }, [products])
- 
+
 
 
     // handler
     const [cart, setCart] = useState([])
-    
+
     const handleAddtoCart = (selectedProduct) => {
-        
+
         let newCart = []
         const exists = cart.find(product => product.id === selectedProduct.id)
         if (!exists) {
             selectedProduct.quantity = 1
-            newCart = [...cart , selectedProduct]
+            newCart = [...cart, selectedProduct]
         }
         else {
-            const rest = cart.filter(product => product.id !==selectedProduct.id)
+            const rest = cart.filter(product => product.id !== selectedProduct.id)
             exists.quantity = exists.quantity + 1
-            newCart = [...rest,exists]
+            newCart = [...rest, exists]
         }
         setCart(newCart)
         addToDb(selectedProduct.id)
-     
+
     }
 
-    
     // returning
     return (
         <div className='shopping-container'>
+            
             <div className="product-container">
-            {
+                {
                     products.map(product => <Product
                         key={product.id}
                         product={product}
-                        handleAddtoCart = {handleAddtoCart}
+                        handleAddtoCart={handleAddtoCart}
                     />)
-            }
-            </div>       
+                }
+            </div>
 
             <div className="cart-container">
                 <h3>Order Summary </h3>
                 <FontAwesomeIcon className='icon' icon={faShoppingCart} />
-                <hr />                
-
-           
-                
-                    <CartTotal cart = {cart}  />
+                <hr />
+                <CartTotal cart={cart} />
                 {
-                    cart.map(product => <ShowCart product={product}/>)
+                    cart.map(product => <ShowCart product={product} />)
                 }
             </div>
         </div>
