@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Product from '../Product/Product';
-import ShowCart from '../ShowingCart/ShowCart';
+
 import { CartTotal } from '../CartTotal/CartTotal'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faShoppingCart } from '@fortawesome/free-solid-svg-icons'
@@ -8,6 +8,7 @@ import './Shop.css'
 import { addToDb, getStoredItem } from '../../utilities/fakedb';
 import UseProduct from '../Hooks/UseProduct';
 import useCart from '../useCart/useCart';
+import { Link } from 'react-router-dom';
 
 const Shop = () => {
     // load local storage data 
@@ -70,10 +71,14 @@ const Shop = () => {
                 <h3>Order Summary </h3>
                 <FontAwesomeIcon className='icon' icon={faShoppingCart} />
                 <hr />
-                <CartTotal cart={cart} />
-                {
-                    cart.map(product => <ShowCart product={product} />)
-                }
+                <CartTotal cart={cart}>
+           
+                    <Link  to="/orderReview" >
+                        <button className='order-review'> Order Review</button>
+                    </Link>
+               
+                </CartTotal>
+                
             </div>
         </div>
     );

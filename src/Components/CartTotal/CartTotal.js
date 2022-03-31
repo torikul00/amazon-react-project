@@ -3,7 +3,8 @@ import './CartTotal.css'
 
 const CartTotal = (props) => {
     
-    const {cart} = props
+    const { cart } = props
+    console.log(props)
 
     let total = 0;
     let totalShping = 0
@@ -26,7 +27,8 @@ const CartTotal = (props) => {
             <p>Shipping : $ {totalShping}</p>
             <p>Tax : ${totalTax}</p>
             <hr />
-            <p>Total Bill : $ { grandTotal}</p>
+            <p>Total Bill : $ {grandTotal}</p>
+            {props.children}
 
         </div>
     );
