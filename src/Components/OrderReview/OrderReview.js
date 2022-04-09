@@ -8,7 +8,7 @@ import useCart from '../useCart/useCart';
 import './OrderReview.css'
 
 const OrderReview = () => {
-    const [products, setProducts] = UseProduct()
+    const [products] = UseProduct()
     const [cart, setCart] = useCart(products)
 
     const deleteFromCart = (cartItem) => {
