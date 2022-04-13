@@ -5,12 +5,13 @@
 
     height: 100vh;
 }
-.order-procced{
+.order-button{
     border: 1px solid white;
-  
+    
     background-color: #1C2B35;
     cursor: pointer;
     color: white;
-    padding: 6px 13px;
+    padding: 4px 10px;
+    margin: 5px 0px;
     
 }

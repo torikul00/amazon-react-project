@@ -1,66 +1,102 @@
 import React, { useState } from 'react';
 import './SignUp.css'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useNavigate, } from 'react-router-dom'
 import { FcGoogle } from 'react-icons/fc';
-import { useCreateUserWithEmailAndPassword } from 'react-firebase-hooks/auth';
+
+import useFirebase from '../Hooks/useFirebase';
+import { createUserWithEmailAndPassword } from 'firebase/auth';
 import auth from '../firebase.init';
+import toast from 'react-hot-toast';
 
 const SignUp = () => {
+    const navigate = useNavigate()
+    const { signInWithGoogle } = useFirebase()
+    const [email, setEmail] = useState({ value: '', error: '' })
+    const [password, setPassword] = useState({ value: '', error: '' })
+    const [confirmPassword, setConfirmPassword] = useState({ value: '', error: '' })
 
-    const [email, setEmail] = useState('')
-    const [password, setPassword] = useState('')
-    const [confirmPassword, setConfirmPassword] = useState('')
-    const [error, setError] = useState('')
-    const navigate = useNavigate();
-    const [createUserWithEmailAndPassword, user] = useCreateUserWithEmailAndPassword(auth)
-   
-    const handleEmail = (e) => {
-        setEmail(e.target.value)
-    }
-    const handlePassword = (e) => {
-        setPassword(e.target.value)
-    }
-    const handleConfirmPassword = (e) => {
-        setConfirmPassword(e.target.value)
-    }
-    if(user){
-        navigate('/shop');
-    }
-    const handleSubmit = (e)=>{
-        e.preventDefault()
-        if (password !== confirmPassword) {
-            setError('Your password did not match')
-            return
+    const handleEmail = (email) => {
+        if (/^\S+@\S+\.\S+$/.test(email)) {
+            setEmail({ value: email, error: '' })
         }
-        else { setError('') }
-
-        createUserWithEmailAndPassword(email,password)
+        else {
+            setEmail({ value: '', error: 'Email is invalid' })
+        }
 
     }
-  
+    const handlePassword = (password) => {
+        if (password.length > 5) {
+            setPassword({ value: password, error: '' })
+        }
+        else {
+            setPassword({ value: '', error: 'Password is Invalid' })
+        }
+    }
+    const handleConfirmPassword = (confirmPassword) => {
+        if (password.value === confirmPassword) {
+            setConfirmPassword({ value: confirmPassword, error: '' })
+        }
+        else {
+            setConfirmPassword({ value: '', error: 'Password did not match' })
+        }
+    }
+
+
+    const handleSubmit = (e) => {
+
+        if (email && password && confirmPassword) {
+
+            e.preventDefault()
+            createUserWithEmailAndPassword(auth, email.value, password.value)
+                .then(() => {
+                    toast.success('SignUp Succesful',{id:'success'})
+                    navigate('/')
+                })
+                .catch((err) => {
+                    if (err.message.includes('email-already-in-use')) {
+                      toast.error('Email already registered',{id:'exist'})
+                   }
+                    else {
+                        toast.error('Something went wrong' ,{id:'error1'})
+                   }
+                })
+
+        }
+
+    }
+
+
     return (
         <div className='form-container'>
             <h1 className='form-title'>Sign Up</h1>
-           
+
             <form onSubmit={handleSubmit}>
                 <div className="form-inputs">
-                    <p style={{color:'red'}}>{error }</p>
-                <label htmlFor="email"  >Email</label>
-                <input onBlur={handleEmail} type="email" name='email' required />
-                <label htmlFor="password">Password</label>
-                <input onBlur={handlePassword} type="password" name="password" required />
-                <label htmlFor="confirmpassword">Confirm Pasword</label>
-                <input onBlur={handleConfirmPassword} type="password" name="password" required />
-                <button className='login-button'>Sign Up</button>
-                <p>already have an account ?
-                    <Link className='acc-link' to='/login'> Login</Link>
-                </p>
+                    <label htmlFor="email"  >Email</label>
+                    {
+                        email?.error && <small className='error-message'>{email.error}</small>
+                    }
+                    <input onBlur={(e) => handleEmail(e.target.value)} type="email" name='email' required placeholder='Email' />
+                    <label htmlFor="password">Password</label>
+                    {
+                        password?.error && <small className='error-message'>{password.error} </small>
+                    }
+                    <input onBlur={(e) => handlePassword(e.target.value)} type="password" name="password" required placeholder='password' />
+                    <label htmlFor="confirmpassword">Confirm Pasword</label>
+                    {
+                        confirmPassword?.error && <small className='error-message'>{confirmPassword.error}</small>
+                    }
+                    <input onBlur={(e) => handleConfirmPassword(e.target.value)} type="password" name="confirmpassword" required placeholder='Confirm Password' />
 
-            </div>
-            </form> 
+                    <button className='login-button'>Sign Up</button>
+                    <p>already have an account ?
+                        <Link className='acc-link' to='/login'> Login</Link>
+                    </p>
+                </div>
+            </form>
             <hr />
 
-            <button className='google-button'> <FcGoogle className='google-icon' /> Continue with Google </button>
+            <button onClick={signInWithGoogle} className='google-button'> <FcGoogle className='google-icon' /> Continue with Google </button>
         </div>
     );
 };

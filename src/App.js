@@ -9,11 +9,15 @@ import About from "./Components/About/About";
 import Login from "./Components/Login/Login";
 import SignUp from "./Components/SignUp/SignUp";
 import RequireAuth from "./Components/RequireAuth";
+import { Toaster } from "react-hot-toast";
 
 
 function App() {
  return (
     <div>
+     <Toaster
+   
+     />
      <Header />
      <Routes>
           <Route path="/" element={<Shop />} />

@@ -1,36 +1,54 @@
 import React, { useState } from 'react';
 import './Login.css'
-import { Link, useLocation, useNavigate } from 'react-router-dom'
-import { FcGoogle } from 'react-icons/fc';
+import { Link, useNavigate } from 'react-router-dom'
+import { FcGoogle } from 'react-icons/fc'
+import useFirebase from '../Hooks/useFirebase';
+import { signInWithEmailAndPassword } from 'firebase/auth';
 import auth from '../firebase.init';
-import { useSignInWithEmailAndPassword } from 'react-firebase-hooks/auth';
+import toast from 'react-hot-toast';
+
 
 const Login = () => {
     const navigate = useNavigate()
-    const [email, setEmail] = useState('')
-    const [password, setPassword] = useState('')
-    const location = useLocation()
-    const [
-        signInWithEmailAndPassword,
-        user,
-        loading,
-        error,
-    ] = useSignInWithEmailAndPassword(auth);
-    const from = location.state?.from?.pathname || '/';
-    if (user) {
-        navigate(from, {replace: true});
-    }
+    const { signInWithGoogle } = useFirebase()
+    const [email, setEmail] = useState({ value: '', error: '' })
+    const [password, setPassword] = useState({ value: '', error: '' })
 
-    const handleEmail = (e) => {
-        setEmail(e.target.value)
+    const handleEmail = (email) => {
+        if (/^\S+@\S+\.\S+$/.test(email)) {
+            setEmail({ value: email, error: '' })
+        }
+        else {
+            setEmail({ value: '', error: 'Email is invalid' })
+        }
+
     }
-    const handlePassword = (e) => {
-        setPassword(e.target.value)
+    const handlePassword = (password) => {
+        if (password.length > 5) {
+            setPassword({ value: password, error: '' })
+        }
+        else {
+            setPassword({ value: '', error: 'Password is Invalid' })
+        }
     }
     const handleSignIn = (e) => {
+
         e.preventDefault()
-        signInWithEmailAndPassword(email, password);
-       
+        if (email && password) {
+
+
+            signInWithEmailAndPassword(auth, email.value, password.value)
+                .then(() => {
+                    toast.success('Login Successful', { id: 'login' })
+                    navigate('/')
+
+                })
+                .catch(() => {
+                    toast.error('Invalid email and password', { id: 'error5' })
+                })
+        }
+
+
     }
 
     return (
@@ -39,13 +57,16 @@ const Login = () => {
             <form onSubmit={handleSignIn}>
                 <div className="form-inputs">
                     <label htmlFor="email" >Email</label>
-                    <input onBlur={handleEmail} type="email" name='email' required />
-                    <label htmlFor="password">Password</label>
-                    <input onBlur={handlePassword} type="password" name="password" required />
-                    <p style={{ color: 'red' }}>{error?.message}</p>
                     {
-                        loading && <p>Loading...</p>
+                        email?.error && <small className='error-message'>{email.error}</small>
                     }
+                    <input onBlur={(e) => handleEmail(e.target.value)} type="email" name='email' required />
+                    <label htmlFor="password">Password</label>
+                    {
+                        password?.error && <small className='error-message'>{password.error} </small>
+                    }
+                    <input onBlur={(e) => handlePassword(e.target.value)} type="password" name="password" required />
+
                     <button className='login-button'>Login</button>
                     <p>New user ?
                         <Link className='acc-link' to='/signup'> Create New Account</Link>
@@ -53,9 +74,9 @@ const Login = () => {
 
                 </div>
             </form>
-          <hr />
+            <hr />
 
-            <button  className='google-button'> <FcGoogle className='google-icon' /> Continue with Google </button>
+            <button onClick={signInWithGoogle} className='google-button'> <FcGoogle className='google-icon' /> Continue with Google </button>
         </div>
     );
 };

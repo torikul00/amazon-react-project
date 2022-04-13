@@ -34,7 +34,7 @@ const OrderReview = () => {
             
                 <CartTotal cart={cart}>
                     <Link to={'/manageInventory'}>
-                        <button className='order-procced'>Order Procced</button>
+                        <button className='order-button'>Confirm Order</button>
                     </Link>
             </CartTotal>
 
